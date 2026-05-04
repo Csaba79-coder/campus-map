@@ -49,6 +49,18 @@ The application will be available at `http://localhost:4200/`
 - TypeScript 6
 - Node.js 24
 
+## Ports
+
+| Service | Port | URL |
+|---------|------|-----|
+| Angular dev server | 4200 | `http://localhost:4200/` |
+| JSON Server (mock backend) | 3000 | `http://localhost:3000/` |
+
+### JSON Server endpoints
+
+- `GET http://localhost:3000/users`
+- `GET http://localhost:3000/buildings`
+
 ## Default credentials
 
 - Username: `admin`
