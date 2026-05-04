@@ -1,1 +1,10 @@
-/* You can add global styles to this file, and also import other style files */
+.leaflet-div-icon {
+  width: 8px !important;
+  height: 8px !important;
+  margin-left: -4px !important;
+  margin-top: -4px !important;
+  background-color: #3388ff !important;
+  border: 2px solid white !important;
+  border-radius: 50% !important;
+  box-shadow: none !important;
+}

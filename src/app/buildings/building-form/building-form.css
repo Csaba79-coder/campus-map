@@ -1,16 +1,38 @@
-.building-list-container {
+.form-container {
   padding: 2rem;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
-.header {
+form {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-.search-field {
+#building-map {
+  height: 400px;
   width: 100%;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.map-section {
+  margin: 1rem 0;
+}
+
+.polygon-info {
+  margin: 0.5rem 0;
+}
+
+.error-text {
+  color: red;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
 }
 
 .spinner {
@@ -19,6 +41,3 @@
   padding: 2rem;
 }
 
-table {
-  width: 100%;
-}

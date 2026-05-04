@@ -1,1 +1,53 @@
-<p>building-form works!</p>
+<div class="form-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>{{ isEdit() ? 'Edit Building' : 'New Building' }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      @if (loading()) {
+        <div class="spinner">
+          <mat-spinner diameter="40"></mat-spinner>
+        </div>
+      } @else {
+        <form [formGroup]="buildingForm" (ngSubmit)="onSubmit()">
+          <mat-form-field appearance="outline">
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="name" />
+            @if (buildingForm.get('name')?.hasError('required') && buildingForm.get('name')?.touched) {
+              <mat-error>Name is required</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description" rows="3"></textarea>
+            @if (buildingForm.get('description')?.hasError('required') && buildingForm.get('description')?.touched) {
+              <mat-error>Description is required</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-checkbox formControlName="isPublic">Public building</mat-checkbox>
+
+          <div class="map-section">
+            <h3>Draw building polygon on the map</h3>
+            <p class="polygon-info">
+              Points: {{ polygon().length }}
+              @if (polygon().length < 3) {
+                <span class="error-text"> (minimum 3 points required)</span>
+              }
+            </p>
+            <div id="building-map"></div>
+          </div>
+
+          <div class="actions">
+            <button mat-button type="button" (click)="router.navigate(['/buildings'])">Cancel</button>
+            <button mat-raised-button color="primary" type="submit"
+                    [disabled]="buildingForm.invalid || polygon().length < 3">
+              {{ isEdit() ? 'Update' : 'Create' }}
+            </button>
+          </div>
+        </form>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>
