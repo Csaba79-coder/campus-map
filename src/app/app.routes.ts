@@ -16,6 +16,24 @@ export const routes: Routes = [
       import('./home/home').then((m) => m.Home),
   },
   {
+    path: 'buildings',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./buildings/building-list/building-list').then((m) => m.BuildingList),
+  },
+  {
+    path: 'buildings/new',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./buildings/building-form/building-form').then((m) => m.BuildingForm),
+  },
+  {
+    path: 'buildings/edit/:id',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./buildings/building-form/building-form').then((m) => m.BuildingForm),
+  },
+  {
     path: '**',
     redirectTo: '',
   },
