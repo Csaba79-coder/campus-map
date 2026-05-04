@@ -1,0 +1,25 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "admin",
+      "password": "test01",
+      "token": "admin-fake-jwt-token"
+    }
+  ],
+  "buildings": [
+    {
+      "id": 1,
+      "name": "Main Building",
+      "description": "The main university building",
+      "userId": 1,
+      "isPublic": true,
+      "polygon": [
+        [47.0927, 17.9094],
+        [47.0927, 17.9100],
+        [47.0923, 17.9100],
+        [47.0923, 17.9094]
+      ]
+    }
+  ]
+}
