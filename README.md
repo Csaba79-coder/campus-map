@@ -15,7 +15,7 @@ Advanced Web Development — Exam Assignment, 2026.
 git clone https://github.com/Csaba79-coder/campus-map.git
 cd campus-map
 npm install
-npm i -g json-server
+npm i -g json-server@0.17.4
 ng add @angular/material
 npm install leaflet @types/leaflet
 npm install leaflet-draw
@@ -28,7 +28,7 @@ npm install @types/leaflet-draw
 Start the JSON Server (mock backend):
 
 ```bash
-npx json-server src/db/db.json
+npx json-server src/db/db.json --middlewares src/db/login-middleware.js
 ```
 
 Start the Angular dev server (in a separate terminal):
