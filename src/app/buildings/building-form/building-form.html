@@ -29,7 +29,17 @@
           <mat-checkbox formControlName="isPublic">Public building</mat-checkbox>
 
           <div class="map-section">
-            <h3>Draw building polygon on the map</h3>
+            <div class="map-header">
+              <h3>Draw building polygon on the map</h3>
+              <div class="undo-redo">
+                <button mat-icon-button type="button" (click)="undo()" [disabled]="!canUndo()">
+                  <mat-icon>undo</mat-icon>
+                </button>
+                <button mat-icon-button type="button" (click)="redo()" [disabled]="!canRedo()">
+                  <mat-icon>redo</mat-icon>
+                </button>
+              </div>
+            </div>
             <p class="polygon-info">
               Points: {{ polygon().length }}
               @if (polygon().length < 3) {

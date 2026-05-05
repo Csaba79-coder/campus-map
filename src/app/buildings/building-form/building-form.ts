@@ -7,6 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { finalize } from 'rxjs';
@@ -31,6 +32,7 @@ function polygonMinPoints(control: AbstractControl): ValidationErrors | null {
     MatInputModule,
     MatButtonModule,
     MatCheckboxModule,
+    MatIconModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
   ],
@@ -53,6 +55,11 @@ export class BuildingForm implements OnInit, AfterViewInit {
   private drawnItems = new L.FeatureGroup();
   polygon = signal<[number, number][]>([]);
 
+  private history: [number, number][][] = [];
+  private historyIndex = -1;
+  canUndo = signal(false);
+  canRedo = signal(false);
+
   ngOnInit(): void {
     this.buildingForm = this.fb.group({
       name: ['', Validators.required],
@@ -73,6 +80,43 @@ export class BuildingForm implements OnInit, AfterViewInit {
     if (!this.isEdit()) {
       this.initMap();
     }
+  }
+
+  private pushHistory(coords: [number, number][]): void {
+    this.history = this.history.slice(0, this.historyIndex + 1);
+    this.history.push([...coords.map((c) => [...c] as [number, number])]);
+    this.historyIndex = this.history.length - 1;
+    this.canUndo.set(this.historyIndex > 0);
+    this.canRedo.set(false);
+  }
+
+  undo(): void {
+    if (this.historyIndex > 0) {
+      this.historyIndex--;
+      const coords = this.history[this.historyIndex];
+      this.applyPolygon(coords);
+    }
+  }
+
+  redo(): void {
+    if (this.historyIndex < this.history.length - 1) {
+      this.historyIndex++;
+      const coords = this.history[this.historyIndex];
+      this.applyPolygon(coords);
+    }
+  }
+
+  private applyPolygon(coords: [number, number][]): void {
+    this.polygon.set(coords);
+    this.buildingForm.get('polygon')?.setValue(coords);
+    this.drawnItems.clearLayers();
+    if (coords.length >= 3) {
+      const latLngs = coords.map((c) => L.latLng(c[0], c[1]));
+      const poly = L.polygon(latLngs, { color: '#3388ff' });
+      this.drawnItems.addLayer(poly);
+    }
+    this.canUndo.set(this.historyIndex > 0);
+    this.canRedo.set(this.historyIndex < this.history.length - 1);
   }
 
   private initMap(): void {
@@ -108,21 +152,27 @@ export class BuildingForm implements OnInit, AfterViewInit {
       const layer = event.layer;
       this.drawnItems.addLayer(layer);
       const latLngs = layer.getLatLngs()[0];
-      this.polygon.set(latLngs.map((ll: L.LatLng) => [ll.lat, ll.lng]));
-      this.buildingForm.get('polygon')?.setValue(this.polygon());
+      const coords = latLngs.map((ll: L.LatLng) => [ll.lat, ll.lng] as [number, number]);
+      this.polygon.set(coords);
+      this.buildingForm.get('polygon')?.setValue(coords);
+      this.pushHistory(coords);
     });
 
     this.map.on(L.Draw.Event.DELETED, () => {
-      this.polygon.set([]);
-      this.buildingForm.get('polygon')?.setValue(this.polygon());
+      const coords: [number, number][] = [];
+      this.polygon.set(coords);
+      this.buildingForm.get('polygon')?.setValue(coords);
+      this.pushHistory(coords);
     });
 
     this.map.on(L.Draw.Event.EDITED, (event: any) => {
       const layers = event.layers;
       layers.eachLayer((layer: any) => {
         const latLngs = layer.getLatLngs()[0];
-        this.polygon.set(latLngs.map((ll: L.LatLng) => [ll.lat, ll.lng]));
-        this.buildingForm.get('polygon')?.setValue(this.polygon());
+        const coords = latLngs.map((ll: L.LatLng) => [ll.lat, ll.lng] as [number, number]);
+        this.polygon.set(coords);
+        this.buildingForm.get('polygon')?.setValue(coords);
+        this.pushHistory(coords);
       });
     });
   }
@@ -141,6 +191,7 @@ export class BuildingForm implements OnInit, AfterViewInit {
             polygon: building.polygon,
           });
           this.polygon.set(building.polygon);
+          this.pushHistory(building.polygon);
           setTimeout(() => {
             this.initMap();
             this.drawExistingPolygon(building.polygon);

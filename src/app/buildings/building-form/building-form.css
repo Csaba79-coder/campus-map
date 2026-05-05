@@ -41,3 +41,13 @@ form {
   padding: 2rem;
 }
 
+.map-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.undo-redo {
+  display: flex;
+  gap: 0.25rem;
+}
