@@ -22,7 +22,7 @@ export const loginEffect = createEffect(
             })
           ),
           catchError((error) =>
-            of(AuthActions.loginFailure({ error: error.message }))
+            of(AuthActions.loginFailure({ error: error.error?.error || 'Invalid username or password' }))
           )
         )
       )

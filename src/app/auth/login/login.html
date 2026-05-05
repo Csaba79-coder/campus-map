@@ -21,10 +21,6 @@
           }
         </mat-form-field>
 
-        @if (error$ | async; as error) {
-          <p class="error-message">{{ error }}</p>
-        }
-
         <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid || (loading$ | async)">
           @if (loading$ | async) {
             <mat-spinner diameter="20"></mat-spinner>

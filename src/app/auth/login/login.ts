@@ -8,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
@@ -20,6 +21,7 @@ import { AsyncPipe } from '@angular/common';
     MatInputModule,
     MatButtonModule,
     MatProgressSpinnerModule,
+    MatSnackBarModule,
     AsyncPipe,
   ],
   templateUrl: './login.html',
@@ -28,6 +30,7 @@ import { AsyncPipe } from '@angular/common';
 export class Login {
   private fb = inject(FormBuilder);
   private store = inject(Store);
+  private snackBar = inject(MatSnackBar);
 
   loginForm: FormGroup = this.fb.group({
     username: ['', Validators.required],
@@ -36,6 +39,14 @@ export class Login {
 
   error$ = this.store.select(selectAuthError);
   loading$ = this.store.select(selectAuthLoading);
+
+  constructor() {
+    this.error$.subscribe((error) => {
+      if (error) {
+        this.snackBar.open(error, 'Close', { duration: 3000 });
+      }
+    });
+  }
 
   onSubmit(): void {
     if (this.loginForm.valid) {
