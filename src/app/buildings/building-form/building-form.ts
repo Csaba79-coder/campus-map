@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, AfterViewInit, signal } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BuildingService, Building } from '../services/building';
 import { MatCardModule } from '@angular/material/card';
@@ -12,6 +12,14 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { finalize } from 'rxjs';
 import * as L from 'leaflet';
 import 'leaflet-draw';
+
+function polygonMinPoints(control: AbstractControl): ValidationErrors | null {
+  const points = control.value;
+  if (!points || points.length < 3) {
+    return { minPoints: { required: 3, actual: points ? points.length : 0 } };
+  }
+  return null;
+}
 
 @Component({
   selector: 'app-building-form',
@@ -50,6 +58,7 @@ export class BuildingForm implements OnInit, AfterViewInit {
       name: ['', Validators.required],
       description: ['', Validators.required],
       isPublic: [false],
+      polygon: [[], polygonMinPoints],
     });
 
     const id = this.route.snapshot.paramMap.get('id');
@@ -100,10 +109,12 @@ export class BuildingForm implements OnInit, AfterViewInit {
       this.drawnItems.addLayer(layer);
       const latLngs = layer.getLatLngs()[0];
       this.polygon.set(latLngs.map((ll: L.LatLng) => [ll.lat, ll.lng]));
+      this.buildingForm.get('polygon')?.setValue(this.polygon());
     });
 
     this.map.on(L.Draw.Event.DELETED, () => {
       this.polygon.set([]);
+      this.buildingForm.get('polygon')?.setValue(this.polygon());
     });
 
     this.map.on(L.Draw.Event.EDITED, (event: any) => {
@@ -111,6 +122,7 @@ export class BuildingForm implements OnInit, AfterViewInit {
       layers.eachLayer((layer: any) => {
         const latLngs = layer.getLatLngs()[0];
         this.polygon.set(latLngs.map((ll: L.LatLng) => [ll.lat, ll.lng]));
+        this.buildingForm.get('polygon')?.setValue(this.polygon());
       });
     });
   }
@@ -126,6 +138,7 @@ export class BuildingForm implements OnInit, AfterViewInit {
             name: building.name,
             description: building.description,
             isPublic: building.isPublic,
+            polygon: building.polygon,
           });
           this.polygon.set(building.polygon);
           setTimeout(() => {
@@ -151,12 +164,6 @@ export class BuildingForm implements OnInit, AfterViewInit {
 
   onSubmit(): void {
     if (this.buildingForm.invalid) {
-      return;
-    }
-    if (this.polygon().length < 3) {
-      this.snackBar.open('Please draw a polygon with at least 3 points', 'Close', {
-        duration: 3000,
-      });
       return;
     }
 
