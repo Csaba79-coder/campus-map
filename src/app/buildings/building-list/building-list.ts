@@ -43,7 +43,7 @@ export class BuildingList implements OnInit {
   filteredBuildings = computed(() => {
     const term = this.searchTerm().toLowerCase();
     return this.buildings().filter((b) =>
-      b.name.toLowerCase().includes(term)
+      b.name.toLowerCase().includes(term) || b.description.toLowerCase().includes(term)
     );
   });
 
