@@ -1,1 +1,8 @@
-<p>home works!</p>
+<div class="home-container">
+  @if (loading()) {
+    <div class="spinner">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+  }
+  <div id="home-map"></div>
+</div>

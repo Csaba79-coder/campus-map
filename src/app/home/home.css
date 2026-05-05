@@ -1,0 +1,17 @@
+.home-container {
+  height: calc(100vh - 64px);
+  position: relative;
+}
+
+#home-map {
+  height: 100%;
+  width: 100%;
+}
+
+.spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+}
