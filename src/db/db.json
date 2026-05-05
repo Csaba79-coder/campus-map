@@ -1,7 +1,7 @@
 {
   "users": [
     {
-      "id": 1,
+      "id": "1",
       "username": "admin",
       "password": "test01",
       "token": "admin-fake-jwt-token"
@@ -9,17 +9,55 @@
   ],
   "buildings": [
     {
-      "id": 1,
+      "id": "1",
       "name": "Main Building",
       "description": "The main university building",
       "userId": 1,
       "isPublic": true,
       "polygon": [
-        [47.0927, 17.9094],
-        [47.0927, 17.9100],
-        [47.0923, 17.9100],
-        [47.0923, 17.9094]
+        [
+          47.0927,
+          17.9094
+        ],
+        [
+          47.0927,
+          17.91
+        ],
+        [
+          47.0923,
+          17.91
+        ],
+        [
+          47.0923,
+          17.9094
+        ]
       ]
+    },
+    {
+      "name": "Test1",
+      "description": "Test 1 building",
+      "isPublic": false,
+      "polygon": [
+        [
+          47.09305269009847,
+          17.908264696598057
+        ],
+        [
+          47.092893821433854,
+          17.90843635797501
+        ],
+        [
+          47.09295042986297,
+          17.90855169296265
+        ],
+        [
+          47.09310564621468,
+          17.908374667167667
+        ]
+      ],
+      "userId": 1,
+      "id": "E6SL25Ck0B8"
     }
-  ]
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }
