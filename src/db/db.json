@@ -9,10 +9,8 @@
   ],
   "buildings": [
     {
-      "id": "1",
       "name": "Main Building",
       "description": "The main university building",
-      "userId": 1,
       "isPublic": true,
       "polygon": [
         [
@@ -31,7 +29,9 @@
           47.0923,
           17.9094
         ]
-      ]
+      ],
+      "userId": 1,
+      "id": "1"
     },
     {
       "name": "Test1",

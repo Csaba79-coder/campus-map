@@ -61,7 +61,9 @@ export class BuildingForm implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.initMap();
+    if (!this.isEdit()) {
+      this.initMap();
+    }
   }
 
   private initMap(): void {
@@ -126,7 +128,11 @@ export class BuildingForm implements OnInit, AfterViewInit {
             isPublic: building.isPublic,
           });
           this.polygon.set(building.polygon);
-          this.drawExistingPolygon(building.polygon);
+          setTimeout(() => {
+            this.initMap();
+            this.drawExistingPolygon(building.polygon);
+            this.map.invalidateSize();
+          }, 100);
         },
         error: () =>
           this.snackBar.open('Failed to load building', 'Close', { duration: 3000 }),

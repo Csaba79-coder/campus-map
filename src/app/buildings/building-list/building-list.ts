@@ -11,6 +11,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { FormsModule } from '@angular/forms';
 import { AreaPipe } from '../../shared/pipes/area-pipe';
 import { finalize } from 'rxjs';
+import { DblClickEdit } from '../../shared/directives/dbl-click-edit';
 
 @Component({
   selector: 'app-building-list',
@@ -25,6 +26,7 @@ import { finalize } from 'rxjs';
     MatSnackBarModule,
     FormsModule,
     AreaPipe,
+    DblClickEdit,
   ],
   templateUrl: './building-list.html',
   styleUrl: './building-list.css',
