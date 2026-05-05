@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface Building {
-  id?: number;
+  id?: any;
   name: string;
   description: string;
   userId: number;
@@ -22,7 +22,7 @@ export class BuildingService {
     return this.http.get<Building[]>(this.apiUrl);
   }
 
-  getById(id: number): Observable<Building> {
+  getById(id: any): Observable<Building> {
     return this.http.get<Building>(`${this.apiUrl}/${id}`);
   }
 
@@ -30,11 +30,11 @@ export class BuildingService {
     return this.http.post<Building>(this.apiUrl, building);
   }
 
-  update(id: number, building: Building): Observable<Building> {
+  update(id: any, building: Building): Observable<Building> {
     return this.http.put<Building>(`${this.apiUrl}/${id}`, building);
   }
 
-  delete(id: number): Observable<void> {
+  delete(id: any): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }

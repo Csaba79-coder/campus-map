@@ -69,11 +69,11 @@ export class BuildingList implements OnInit {
     this.router.navigate(['/buildings/new']);
   }
 
-  onEdit(id: number): void {
+  onEdit(id: any): void {
     this.router.navigate(['/buildings/edit', id]);
   }
 
-  onDelete(id: number): void {
+  onDelete(id: any): void {
     this.loading.set(true);
     this.buildingService
       .delete(id)
@@ -88,7 +88,7 @@ export class BuildingList implements OnInit {
       });
   }
 
-  trackById(index: number, building: Building): number {
-    return building.id!;
+  trackById(index: number, building: Building): any {
+    return building.id;
   }
 }

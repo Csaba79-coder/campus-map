@@ -47,7 +47,7 @@ export class BuildingForm implements OnInit, AfterViewInit {
   buildingForm!: FormGroup;
   loading = signal(false);
   isEdit = signal(false);
-  buildingId: number | null = null;
+  buildingId: any = null;
 
   private map!: L.Map;
   private drawnItems = new L.FeatureGroup();
@@ -64,7 +64,7 @@ export class BuildingForm implements OnInit, AfterViewInit {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.isEdit.set(true);
-      this.buildingId = +id;
+      this.buildingId = id;
       this.loadBuilding(this.buildingId);
     }
   }
@@ -127,7 +127,7 @@ export class BuildingForm implements OnInit, AfterViewInit {
     });
   }
 
-  private loadBuilding(id: number): void {
+  private loadBuilding(id: any): void {
     this.loading.set(true);
     this.buildingService
       .getById(id)
@@ -176,7 +176,7 @@ export class BuildingForm implements OnInit, AfterViewInit {
     this.loading.set(true);
 
     const request$ = this.isEdit()
-      ? this.buildingService.update(this.buildingId!, building)
+      ? this.buildingService.update(this.buildingId, building)
       : this.buildingService.create(building);
 
     request$.pipe(finalize(() => this.loading.set(false))).subscribe({
