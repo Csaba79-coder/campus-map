@@ -5,7 +5,7 @@ module.exports = (req, res, next) => {
     const user = db.get('users').find({ username, password }).value();
 
     if (user) {
-      res.status(200).json({ username: user.username, token: user.token });
+      res.status(200).json({ username: user.username, token: user.token, userId: user.id });
     } else {
       res.status(401).json({ error: 'Invalid username or password' });
     }

@@ -22,3 +22,18 @@
 table {
   width: 100%;
 }
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.public-icon {
+  font-size: 16px;
+  height: 16px;
+  width: 16px;
+  vertical-align: middle;
+  opacity: 0.6;
+  margin-left: 0.5rem;
+}

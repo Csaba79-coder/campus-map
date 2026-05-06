@@ -5,6 +5,12 @@
       "username": "admin",
       "password": "test01",
       "token": "admin-fake-jwt-token"
+    },
+    {
+      "id": "2",
+      "username": "user",
+      "password": "test02",
+      "token": "user-fake-jwt-token"
     }
   ],
   "buildings": [
@@ -30,7 +36,7 @@
           17.9094
         ]
       ],
-      "userId": 1,
+      "userId": "1",
       "id": "1"
     },
     {
@@ -55,8 +61,33 @@
           17.908374667167667
         ]
       ],
-      "userId": 1,
+      "userId": "1",
       "id": "E6SL25Ck0B8"
+    },
+    {
+      "name": "User Public Building",
+      "description": "Building for testing visibility Iskola utca Óvári sarok",
+      "isPublic": true,
+      "polygon": [
+        [
+          47.09139513702012,
+          17.90552616119385
+        ],
+        [
+          47.091095650740726,
+          17.905912399291996
+        ],
+        [
+          47.091365918920665,
+          17.90634155273438
+        ],
+        [
+          47.091592358772246,
+          17.905966043472294
+        ]
+      ],
+      "userId": "2",
+      "id": "zDceTQS"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

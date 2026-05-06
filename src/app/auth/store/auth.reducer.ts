@@ -4,6 +4,7 @@ import * as AuthActions from './auth.actions';
 export interface AuthState {
   username: string | null;
   token: string | null;
+  userId: string | null;
   error: string | null;
   loading: boolean;
 }
@@ -14,6 +15,7 @@ const parsedUser = savedUser ? JSON.parse(savedUser) : null;
 export const initialState: AuthState = {
   username: parsedUser?.username ?? null,
   token: parsedUser?.token ?? null,
+  userId: parsedUser?.userId ?? null,
   error: null,
   loading: false,
 };
@@ -25,10 +27,11 @@ export const authReducer = createReducer(
     loading: true,
     error: null,
   })),
-  on(AuthActions.loginSuccess, (state, { username, token }) => ({
+  on(AuthActions.loginSuccess, (state, { username, token, userId }) => ({
     ...state,
     username,
     token,
+    userId,
     loading: false,
     error: null,
   })),
@@ -40,6 +43,7 @@ export const authReducer = createReducer(
   on(AuthActions.logout, () => ({
     username: null,
     token: null,
+    userId: null,
     error: null,
     loading: false,
   }))

@@ -7,12 +7,18 @@
   <div class="content">
     <div class="list-panel">
       <h3>Buildings</h3>
+      <mat-slide-toggle [ngModel]="showPublic()" (ngModelChange)="onTogglePublic()">
+        Show public
+      </mat-slide-toggle>
       @for (building of buildings(); track building.id) {
         <div
           class="list-item"
           [class.selected]="selectedBuildingId() === building.id"
           (click)="selectFromList(building)">
           <strong>{{ building.name }}</strong>
+          @if (building.isPublic) {
+            <span class="public-badge">public</span>
+          }
           <p>{{ building.description }}</p>
         </div>
       }

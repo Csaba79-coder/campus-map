@@ -1,29 +1,40 @@
 import { Component, inject, OnInit, AfterViewInit, signal } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { selectUserId } from '../auth/store/auth.selectors';
 import { BuildingService, Building } from '../buildings/services/building';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { FormsModule } from '@angular/forms';
 import { finalize } from 'rxjs';
 import * as L from 'leaflet';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [MatSnackBarModule, MatProgressSpinnerModule],
+  imports: [MatSnackBarModule, MatProgressSpinnerModule, MatSlideToggleModule, FormsModule],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
 export class Home implements OnInit, AfterViewInit {
   private buildingService = inject(BuildingService);
   private snackBar = inject(MatSnackBar);
+  private store = inject(Store);
 
+  allBuildings = signal<Building[]>([]);
   buildings = signal<Building[]>([]);
   loading = signal(false);
-  selectedBuildingId = signal<number | null>(null);
+  selectedBuildingId = signal<any>(null);
+  showPublic = signal(false);
+  currentUserId = signal<string | null>(null);
 
   private map!: L.Map;
-  private polygonMap = new Map<number, L.Polygon>();
+  private polygonMap = new Map<any, L.Polygon>();
 
   ngOnInit(): void {
+    this.store.select(selectUserId).subscribe((userId) => {
+      this.currentUserId.set(userId);
+    });
     this.loadBuildings();
   }
 
@@ -47,12 +58,35 @@ export class Home implements OnInit, AfterViewInit {
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
         next: (buildings) => {
-          this.buildings.set(buildings);
-          this.drawBuildings(buildings);
+          this.allBuildings.set(buildings);
+          this.filterAndDraw();
         },
         error: () =>
           this.snackBar.open('Failed to load buildings', 'Close', { duration: 3000 }),
       });
+  }
+
+  onTogglePublic(): void {
+    this.showPublic.set(!this.showPublic());
+    this.filterAndDraw();
+  }
+
+  private filterAndDraw(): void {
+    const userId = this.currentUserId();
+    const filtered = this.allBuildings().filter((b) => {
+      if (this.showPublic()) {
+        return b.userId === userId || b.isPublic;
+      }
+      return b.userId === userId;
+    });
+    this.buildings.set(filtered);
+    this.clearMap();
+    this.drawBuildings(filtered);
+  }
+
+  private clearMap(): void {
+    this.polygonMap.forEach((poly) => poly.remove());
+    this.polygonMap.clear();
   }
 
   private drawBuildings(buildings: Building[]): void {
@@ -87,7 +121,7 @@ export class Home implements OnInit, AfterViewInit {
     }
   }
 
-  private selectBuilding(id: number): void {
+  private selectBuilding(id: any): void {
     this.polygonMap.forEach((poly, polyId) => {
       poly.setStyle({ color: polyId === id ? '#ff4444' : '#3388ff', weight: polyId === id ? 4 : 3 });
     });

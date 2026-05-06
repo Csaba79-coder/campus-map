@@ -6,7 +6,7 @@ export interface Building {
   id?: any;
   name: string;
   description: string;
-  userId: number;
+  userId: string;
   isPublic: boolean;
   polygon: [number, number][];
 }

@@ -63,5 +63,13 @@ The application will be available at `http://localhost:4200/`
 
 ## Default credentials
 
+### Admin
+
 - Username: `admin`
 - Password: `test01`
+
+### User
+
+- Username: `user`
+- Password: `test02`
+- 

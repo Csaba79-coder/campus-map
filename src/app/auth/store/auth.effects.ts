@@ -19,6 +19,7 @@ export const loginEffect = createEffect(
             AuthActions.loginSuccess({
               username: response.username,
               token: response.token,
+              userId: response.userId,
             })
           ),
           catchError((error) =>
@@ -34,8 +35,8 @@ export const loginSuccessEffect = createEffect(
   (actions$ = inject(Actions), router = inject(Router)) =>
     actions$.pipe(
       ofType(AuthActions.loginSuccess),
-      tap(({ username, token }) => {
-        localStorage.setItem('auth', JSON.stringify({ username, token }));
+      tap(({ username, token, userId }) => {
+        localStorage.setItem('auth', JSON.stringify({ username, token, userId }));
         router.navigate(['/']);
       })
     ),

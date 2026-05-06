@@ -1,6 +1,8 @@
 import { Component, inject, OnInit, AfterViewInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { selectUserId } from '../../auth/store/auth.selectors';
 import { BuildingService, Building } from '../services/building';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -45,11 +47,13 @@ export class BuildingForm implements OnInit, AfterViewInit {
   protected router = inject(Router);
   private buildingService = inject(BuildingService);
   private snackBar = inject(MatSnackBar);
+  private store = inject(Store);
 
   buildingForm!: FormGroup;
   loading = signal(false);
   isEdit = signal(false);
   buildingId: any = null;
+  currentUserId = signal<string | null>(null);
 
   private map!: L.Map;
   private drawnItems = new L.FeatureGroup();
@@ -61,6 +65,10 @@ export class BuildingForm implements OnInit, AfterViewInit {
   canRedo = signal(false);
 
   ngOnInit(): void {
+    this.store.select(selectUserId).subscribe((userId) => {
+      this.currentUserId.set(userId);
+    });
+
     this.buildingForm = this.fb.group({
       name: ['', Validators.required],
       description: ['', Validators.required],
@@ -221,7 +229,7 @@ export class BuildingForm implements OnInit, AfterViewInit {
     const building: Building = {
       ...this.buildingForm.value,
       polygon: this.polygon(),
-      userId: 1,
+      userId: this.currentUserId()!,
     };
 
     this.loading.set(true);
